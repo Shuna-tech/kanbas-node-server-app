@@ -17,6 +17,6 @@ const userSchema = new mongoose.Schema({
     lastActivity: Date,
     totalActivity: String,
   },
-  { collection: "users" }, {_id: true}
+  { collection: "users" }
 );
 export default userSchema;

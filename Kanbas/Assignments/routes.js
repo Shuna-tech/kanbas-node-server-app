@@ -17,12 +17,16 @@ export default function AssignmentRoutes(app) {
   });
   app.post("/api/courses/:cid/assignments", (req, res) => {
     const { cid } = req.params;
+    console.log("creating new assignment for course: ",  cid)
     const newAssignment = {
       ...req.body,
       course: cid,
       _id: new Date().getTime().toString(),
     };
+    console.log("creatd new assignment: ",  newAssignment);
+    console.log("db assignments before: ",  db.assignments);
     db.assignments.push(newAssignment);
+    console.log("db assignments after: ",  db.assignments);
     res.send(newAssignment);
   });
   app.get("/api/courses/:cid/assignments", (req, res) => {

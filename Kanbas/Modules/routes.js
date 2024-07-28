@@ -1,36 +1,51 @@
-import db from "../Database/index.js";
+// import db from "../Database/index.js";
+import * as dao from "./dao.js";
+
 export default function ModuleRoutes(app) {
-  app.put("/api/modules/:mid", (req, res) => {
+  const updateModule = async (req, res) => {
+  // app.put("/api/modules/:mid", (req, res) => {
     const { mid } = req.params;
-    const moduleIndex = db.modules.findIndex(
-      (m) => m._id === mid);
-    db.modules[moduleIndex] = {
-      ...db.modules[moduleIndex],
-      ...req.body
-    };
+    const module = req.body;
+    // const moduleIndex = db.modules.findIndex(
+    //   (m) => m._id === mid);
+    // db.modules[moduleIndex] = {
+    //   ...db.modules[moduleIndex],
+    //   ...req.body
+    // };
+    const updatedModule = await dao.updateModule(mid, module);
     res.sendStatus(204);
-  });
+  };
 
-  app.delete("/api/modules/:mid", (req, res) => {
+  // app.delete("/api/modules/:mid", (req, res) => {
+  const deleteModule = async (req, res) => {
     const { mid } = req.params;
-    db.modules = db.modules.filter((m) => m._id !== mid);
+    console.log("module id: ", mid);
+    const status = await dao.deleteModule(mid);
+    console.log("delete status: ", status);
     res.sendStatus(200);
-  });
+  };
 
-  app.post("/api/courses/:cid/modules", (req, res) => {
+  const createModule = async (req, res) => {
     const { cid } = req.params;
-    const newModule = {
-      ...req.body,
-      course: cid,
-      _id: new Date().getTime().toString(),
-    };
-    db.modules.push(newModule);
-    res.send(newModule);
-  });
+    console.log("course id: ", cid);
+    console.log("request body: ", req.body)
+    const module = { ...req.body, cid};
+    console.log("module: ", module)
+    const createdModule = await dao.createModule(module);
+    console.log("created module: ", createdModule)
+    res.send(createdModule);
+  };
 
-  app.get("/api/courses/:cid/modules", (req, res) => {
+  const findModulesForCourse = async (req, res) => {
     const { cid } = req.params;
-    const modules = db.modules.filter((m) => m.course === cid);
+    console.log("find modules: ", cid)
+    const modules = await dao.findModulesForCourse(cid);
+    console.log("module: ", modules);
     res.json(modules);
-  });
+  };
+
+  app.put("/api/modules/:mid", updateModule);
+  app.delete("/api/modules/:mid", deleteModule);
+  app.post("/api/courses/:cid/modules", createModule);
+  app.get("/api/courses/:cid/modules", findModulesForCourse);
 }
