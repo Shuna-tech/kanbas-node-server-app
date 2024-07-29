@@ -1,22 +1,13 @@
-// import db from "../Database/index.js";
 import * as dao from "./dao.js";
 
 export default function ModuleRoutes(app) {
   const updateModule = async (req, res) => {
-  // app.put("/api/modules/:mid", (req, res) => {
     const { mid } = req.params;
     const module = req.body;
-    // const moduleIndex = db.modules.findIndex(
-    //   (m) => m._id === mid);
-    // db.modules[moduleIndex] = {
-    //   ...db.modules[moduleIndex],
-    //   ...req.body
-    // };
     const updatedModule = await dao.updateModule(mid, module);
     res.sendStatus(204);
   };
 
-  // app.delete("/api/modules/:mid", (req, res) => {
   const deleteModule = async (req, res) => {
     const { mid } = req.params;
     console.log("module id: ", mid);
