@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const questionSchema = new mongoose.Schema({
+  _id: {
+    type: Number
+  },
   questionTitle: {
     type: String,
     required: true
@@ -46,18 +49,18 @@ const quizSchema = new mongoose.Schema({
   },
   quizType: {
     type: String,
-    enum: ['Graded Quiz', 'Practice Quiz', 'Graded Survey', 'Ungraded Survey'],
-    default: 'Graded Quiz'
+    enum: ['GRADED QUIZ', 'PRACTICE QUIZ', 'GRADED SURVEY', 'UPGRADED SURVEY'],
+    default: 'GRADED QUIZ'
   },
-  points: {
+  quizPoints: {
     type: Number,
     min: 0,
     default: 0
   },
   assignmentGroup: {
     type: String,
-    enum: ['Quizzes', 'Exams', 'Assignments', 'Project'],
-    default: 'Quizzes'
+    enum: ['QUIZZES', 'EXAMS', 'ASSIGNMENTS', 'PROJECT'],
+    default: 'QUIZZES'
   },
   shuffleAnswers: {
     type: Boolean,

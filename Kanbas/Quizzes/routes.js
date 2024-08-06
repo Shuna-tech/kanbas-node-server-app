@@ -31,22 +31,27 @@ export default function QuizRoutes(app) {
   //Find all quizzes under one course
   const findQuizzesForCourse = async (req, res) => {
     const { cid } = req.params;
-    const { user } = req; // TODO: need to include user in the request
+    const { user } = req; 
     try {
       let quizzes;
-      if (user.role === 'FACULTY') {
-        quizzes = await dao.findQuizzesForCourse(cid);
-      } else if (user.role === 'STUDENT') {
-        quizzes = await dao.findPublishedQuizzesForCourse(cid);
-      } else {
-        return res.status(403).json({ message: 'Access denied' });
-      }
+      //TODO: need to add auth here, retrieve role from token, call different dao API per role
+      // if (user.role === 'FACULTY') {
+      //   quizzes = await dao.findQuizzesForCourse(cid);
+      // } else if (user.role === 'STUDENT') {
+      //   quizzes = await dao.findPublishedQuizzesForCourse(cid);
+      // } else {
+      //   return res.status(403).json({ message: 'Access denied' });
+      // }
+      console.log("Retriving quiz for: ", cid);
+      quizzes = await dao.findQuizzesForCourse(cid);
+      console.log("Retried quiz: ", quizzes);
       res.json(quizzes);
     } catch (error) {
       console.error('Error finding quizzes for course:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   };
+
 
   //Find quiz by id
   const findQuizById = async (req, res) => {
@@ -106,54 +111,19 @@ export default function QuizRoutes(app) {
     }
   }
 
-  //Add questions to quiz
-  const addQuestions = async (req, res) => {
-    try {
-      const { qid } = req.params;
-      const question = req.body;
-      const quiz = await dao.findQuizById(qid);
-      if (!quiz) {
-        return res.status(404).json({ message: 'Quiz not found' });
-      }
-      quiz.questions.push(question);
-      await quiz.save();
-      res.status(201).json(question);
+  //Save and publish the quiz (different from update the publish status)
+  const publishQuiz = async (req, res) => {
+    const {qid} = req.params;
+    try{
+      const publishedQuiz = await dao.publishQuiz(qid);
+      res.sendStatus(204);
     } catch (error) {
-      console.error('Error adding question:', error);
+      console.error('Error publishing quiz:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
   }
 
-  //Update Questions in quiz
-  const updateQuestionsNoChoices = async (req, res) => {
-    const { qid, questionId } = req.params;
-    const updateData = req.body;
-    try {
-      const quiz = await dao.findQuizById(qid);
-      if (!quiz) {
-        return res.status(404).json({ message: 'Quiz not found' });
-      }
-      console.log("questionId: ", questionId)
-      const question = quiz.questions.id(questionId);
-      console.log("question: ", question);
-      if (!question) {
-        return res.status(404).json({ message: 'Question not found' });
-      }
-      question.set(updateData);
-      console.log("uodated question: ", question)
-      await quiz.save();
-      res.status(204).send();
-    } catch (error) {
-      console.error('Error updating question:', error);
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  }
-
-/*TODO
-deleteQuestions: app.delete("api/quizzes/:qid/questions/:questionId)
-updateChoices: app.put("/api/quizzes/:qid/questions/:questionId/choices/choiceId")
-addChoices: app.post("/api/quizzes/:qid/questions/:questionId/choices")
-deleteChoices: app.delete("api/quizzes/:qid/questions/:questionId/choices/choiceId") */
+  //TODO: Submit the quiz
 
   app.put("/api/quizzes/:qid", updateQuiz);
   app.delete("/api/quizzes/:qid", deleteQuiz);
@@ -163,6 +133,5 @@ deleteChoices: app.delete("api/quizzes/:qid/questions/:questionId/choices/choice
   app.put("/api/quizzes/:qid/updatePublishStatus", updatePublishStatus);
   app.get("/api/quizzes/:qid/preview", previewQuiz);
   app.put("/api/quizzes/:qid/edit", editQuiz)
-  app.post("/api/quizzes/:qid/questions", addQuestions);
-  app.put("/api/quizzes/:qid/questions/:questionId", updateQuestionsNoChoices);
+  app.put("/api/quizzes/:qid/publish", publishQuiz)
 }
