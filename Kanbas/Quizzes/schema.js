@@ -1,12 +1,11 @@
 import mongoose from "mongoose";
 
 const questionSchema = new mongoose.Schema({
-  _id: {
+  questionId: {
     type: Number
   },
   questionTitle: {
     type: String,
-    required: true
   },
   questionType: {
     type: String,
@@ -15,13 +14,11 @@ const questionSchema = new mongoose.Schema({
   },
   points: {
     type: Number,
-    required: true,
     min: 0,
     default: 1
   },
   question: {
     type: String,
-    required: true
   },
   choices: [{
     optionText: String,
