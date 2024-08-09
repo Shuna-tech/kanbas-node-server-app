@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express from 'express';
+import express from "express";
 import Hello from "./Hello.js";
 import Lab5 from "./Lab5/index.js";
 import cors from "cors";
@@ -10,17 +10,17 @@ import QuizRoutes from "./Kanbas/Quizzes/routes.js";
 import mongoose from "mongoose";
 import UserRoutes from "./Users/routes.js";
 import session from "express-session";
-
-const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas"
+import QuizResultRoutes from "./Kanbas/Quizzes/routes.js";
+const CONNECTION_STRING =
+  process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas";
 mongoose.connect(CONNECTION_STRING);
 const app = express();
 app.use(
-  cors(
-  {
+  cors({
     credentials: true,
     origin: process.env.NETLIFY_URL || "http://localhost:3000",
-  }
-));
+  })
+);
 const sessionOptions = {
   secret: process.env.SESSION_SECRET || "kanbas",
   resave: false,
@@ -34,15 +34,14 @@ if (process.env.NODE_ENV !== "development") {
     domain: process.env.NODE_SERVER_DOMAIN,
   };
 }
-app.use(
-  session(sessionOptions)
-);
+app.use(session(sessionOptions));
 app.use(express.json());
 AssignmentRoutes(app);
 ModuleRoutes(app);
 CourseRoutes(app);
 QuizRoutes(app);
+QuizResultRoutes(app); //Added for quiz result
 Hello(app);
 Lab5(app);
 UserRoutes(app);
-app.listen(process.env.PORT || 4000)
+app.listen(process.env.PORT || 4000);
