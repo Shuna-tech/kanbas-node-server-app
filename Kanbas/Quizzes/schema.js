@@ -1,4 +1,16 @@
 import mongoose from "mongoose";
+const choiceSchema = new mongoose.Schema({
+  choiceId: {
+    type: Number,
+  },
+  optionText: {
+    type: String,
+  },
+  isCorrect: {
+    type: Boolean,
+    default: false
+  }
+})
 
 const questionSchema = new mongoose.Schema({
   questionId: {
@@ -9,8 +21,8 @@ const questionSchema = new mongoose.Schema({
   },
   questionType: {
     type: String,
-    enum: ["True/False", "Multiple Choice", "Fill in Multiple Blanks"],
-    default: "Multiple Choice",
+    enum: ['True/False', 'Multiple Choice', 'Fill in Blanks'],
+    default: 'Multiple Choice'
   },
   points: {
     type: Number,
@@ -20,12 +32,7 @@ const questionSchema = new mongoose.Schema({
   question: {
     type: String,
   },
-  choices: [
-    {
-      optionText: String,
-      correct: { type: Boolean, default: false },
-    },
-  ],
+  choices: [choiceSchema]
 });
 
 const quizSchema = new mongoose.Schema(
