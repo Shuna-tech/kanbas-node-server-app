@@ -6,7 +6,7 @@ const choiceSchema = new mongoose.Schema({
   optionText: {
     type: String,
   },
-  isCorrect: {
+  correct: {
     type: Boolean,
     default: false
   }
@@ -21,7 +21,7 @@ const questionSchema = new mongoose.Schema({
   },
   questionType: {
     type: String,
-    enum: ['True/False', 'Multiple Choice', 'Fill in Blanks'],
+    enum: ['True/False', 'Multiple Choice', 'Fill in Multiple Blanks'],
     default: 'Multiple Choice'
   },
   points: {
