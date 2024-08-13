@@ -64,17 +64,21 @@ const quizSchema = new mongoose.Schema(
       ],
       default: "GRADED QUIZ",
     },
-    quizPoints: {
-      type: Number,
-      min: 0,
-      default: 0,
-    },
+    // quizPoints: {
+    //   type: Number,
+    //   min: 0,
+    //   default: 0,
+    // },
     assignmentGroup: {
       type: String,
       enum: ["QUIZZES", "EXAMS", "ASSIGNMENTS", "PROJECT"],
       default: "QUIZZES",
     },
     shuffleAnswers: {
+      type: Boolean,
+      default: true,
+    },
+    isTimeLimited:{
       type: Boolean,
       default: true,
     },
@@ -112,11 +116,9 @@ const quizSchema = new mongoose.Schema(
     },
     availableDate: {
       type: Date,
-      required: true,
     },
     availableUntilDate: {
       type: Date,
-      required: true,
     },
     dueDate: {
       type: Date,

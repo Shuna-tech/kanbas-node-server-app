@@ -24,7 +24,7 @@ export const findPublishedQuizzesForCourse = async (courseId) => {
 export const updateQuiz = (quizId, quiz) =>  model.updateOne({ _id: quizId }, { $set: quiz });
 export const deleteQuiz = (quizId) => model.deleteOne({ _id: quizId });
 export const findQuizById = (quizId) => model.findById(quizId);
-export const publishQuiz = (quizId) => {
+export const publishQuiz = async (quizId) => {
   try{
     const updatedQuiz = model.findByIdAndUpdate(
       quizId,

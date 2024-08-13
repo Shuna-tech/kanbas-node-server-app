@@ -31,12 +31,28 @@ export default function UserRoutes(app) {
     const user = await dao.findUserById(req.params.uid);
     res.json(user);
   };
+  // const updateUser = async (req, res) => {
+  //   console.log("updating: ", req.params)
+  //   const { uid } = req.params;
+  //   const status = await dao.updateUser(uid, req.body);
+  //   res.json(status);
+  //  };
   const updateUser = async (req, res) => {
-    console.log("updating: ", req.params)
+    console.log("Updating user with ID:", req.params.uid);
     const { uid } = req.params;
-    const status = await dao.updateUser(uid, req.body);
-    res.json(status);
-   };
+    try {
+      const updatedUser = await dao.updateUser(uid, req.body);
+      if (updatedUser) {
+        res.json(updatedUser);
+      } else {
+        res.status(404).send({ message: "No user found with the given ID." });
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).send({ message: "Failed to update user due to an internal error." });
+    }
+  };
+  
   const signup = async (req, res) => {
     const user = await dao.findUserByUsername(req.body.username);
     if (user) {

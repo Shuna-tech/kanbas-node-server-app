@@ -34,14 +34,6 @@ export default function QuizRoutes(app) {
     const { user } = req;
     try {
       let quizzes;
-      //TODO: need to add auth here, retrieve role from token, call different dao API per role
-      // if (user.role === 'FACULTY') {
-      //   quizzes = await dao.findQuizzesForCourse(cid);
-      // } else if (user.role === 'STUDENT') {
-      //   quizzes = await dao.findPublishedQuizzesForCourse(cid);
-      // } else {
-      //   return res.status(403).json({ message: 'Access denied' });
-      // }
       console.log("Retriving quiz for: ", cid);
       quizzes = await dao.findQuizzesForCourse(cid);
       console.log("Retried quiz: ", quizzes);
@@ -55,7 +47,6 @@ export default function QuizRoutes(app) {
   //Find quiz by id
   const findQuizById = async (req, res) => {
     const { qid } = req.params;
-    console.log("Getting quize for: ", qid);
     const quiz = await dao.findQuizById(qid);
     res.json(quiz);
   };
@@ -129,7 +120,6 @@ const createOrUpdateQuizResult = async (req, res) => {
 
   try {
     const existingResult = await resultDao.findQuizResultForUserAndQuiz(userId, quizId);
-
     if (existingResult) {
       // Update existing result
       const updatedResult = await resultDao.updateQuizResult(userId, quizId, resultData);
