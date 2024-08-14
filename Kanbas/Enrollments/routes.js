@@ -4,9 +4,7 @@ export default function EnrollmentRoutes(app) {
   app.get("/api/enrollments/:studentId", async (req, res) => {
     try {
       const studentId = req.params.studentId;
-      console.log(studentId);
       const enrollments = await dao.findEnrollmentsForStudent(studentId);
-      console.log(enrollments);
       if (!enrollments) {
         return res.json([]);
       }

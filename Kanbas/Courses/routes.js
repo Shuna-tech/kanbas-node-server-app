@@ -1,5 +1,6 @@
 import Database from "../Database/index.js";
 import * as dao from "./dao.js";
+import * as enrollmentDao from "../Enrollments/dao.js";
 
 export default function CourseRoutes(app) {
   const fetchAllCourses = async (req, res) => {
@@ -16,8 +17,16 @@ export default function CourseRoutes(app) {
 
   const deleteCourse = async (req, res) => {
     const { id } = req.params;
-    const status = await dao.deleteCourse(id);
-    res.sendStatus(204);
+    // const status = await dao.deleteCourse(id);
+    // res.sendStatus(204);
+    try {
+      await dao.deleteCourse(id);
+      await enrollmentDao.deleteEnrollmentsByCourse(id);
+      res.sendStatus(204);
+    } catch (error) {
+      console.error("Error deleting course and enrollments:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   };
 
   const createCourse = async (req, res) => {

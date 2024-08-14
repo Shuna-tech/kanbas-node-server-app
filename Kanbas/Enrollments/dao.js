@@ -11,3 +11,8 @@ export const findEnrollment = (studentId, courseId) =>
 
 export const unenrollStudentFromCourse = (studentId, courseId) =>
   EnrollmentModel.deleteOne({ student: studentId, course: courseId });
+
+// Deleting enrollements when a course is deleted
+export const deleteEnrollmentsByCourse = async (courseId) => {
+  return EnrollmentModel.deleteMany({ course: courseId });
+};
