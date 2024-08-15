@@ -110,7 +110,7 @@ const quizSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    lockQuestionsAfterAnswering: {
+    lockQuestions: {
       type: Boolean,
       default: false,
     },
